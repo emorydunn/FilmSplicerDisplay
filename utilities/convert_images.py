@@ -26,7 +26,7 @@ def matte_image(image):
     print("Image needs matte")
     matte = Image.new('RGB', (128,128), (0,0,0,1))
 
-    # Verticaly center the image in the display region
+    # Vertically center the image in the display region
     # upperLeft - (imageHeight - bbHeight) / 2
     y = 50-(image.size[1]-65)/2
     matte.paste(image, (28,y))
