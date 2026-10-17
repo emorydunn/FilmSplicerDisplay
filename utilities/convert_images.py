@@ -2,10 +2,9 @@ import os
 from PIL import Image
 
 def scale_to_size(im1, width):
-
     wpercent = float(width)/im1.size[0]
     hsize = int(im1.size[1]*wpercent)
-    return im1.resize((width, hsize), Image.ANTIALIAS)
+    return im1.resize((width, hsize))
 
 def resize_image(image):
   if image.size == (128, 128):
@@ -16,7 +15,7 @@ def resize_image(image):
     return image
   else:
     print("Image needs resize")
-    return scale_to_size(image, 100)
+    return scale_to_size(image, 128)
 
 def matte_image(image):
   if image.size == (128, 128):
@@ -28,10 +27,16 @@ def matte_image(image):
 
     # Vertically center the image in the display region
     # upperLeft - (imageHeight - bbHeight) / 2
-    y = 50-(image.size[1]-65)/2
-    matte.paste(image, (28,y))
+    y = (128 - image.size[1]) / 2
+    matte.paste(image, (0, int(y)))
 
     return matte
+
+def mirror_image(image):
+    # image = image.transpose(method=Image.Transpose.FLIP_LEFT_RIGHT)
+    image = image.transpose(method=Image.Transpose.FLIP_TOP_BOTTOM)
+    image = image.rotate(angle=90)
+    return image
 
 def convert_image(sourcePath):
   try:
@@ -43,6 +48,7 @@ def convert_image(sourcePath):
     # Resize and matte the image
     im = resize_image(im)
     im = matte_image(im)
+    im = mirror_image(im)
 
     # Replace spaces and save to `images`
     fileName = fileName.replace(" ", "-")
