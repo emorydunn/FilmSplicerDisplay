@@ -1,7 +1,7 @@
 import os
 import time
 
-from ST7735 import TFT,TFTColor
+from st7735 import TFT,TFTColor
 from machine import SPI,Pin
 
 
@@ -76,24 +76,35 @@ def slide_show(image_paths):
         current_img = 0
 
     while True:
-        if current_img >= len(image_paths):
-            current_img = 0
+        if display_static() == False:
 
-        img_path = image_paths[current_img]
-        print("display " + img_path)
-        load_image(img_path)
+            if current_img >= len(image_paths):
+                current_img = 0
 
-        current_img += 1
-        try:
-            current_image_file = open(current_image_filename, "w")
-            current_image_file.write("{}".format(current_img))
-            current_image_file.close()
-        except Exception as e:
-            print(e)
-            print("Failed to write current image")
+            img_path = image_paths[current_img]
+            print("display " + img_path)
+            load_image(img_path)
+
+            current_img += 1
+            try:
+                current_image_file = open(current_image_filename, "w")
+                current_image_file.write("{}".format(current_img))
+                current_image_file.close()
+            except Exception as e:
+                print(e)
+                print("Failed to write current image")
 
         time.sleep_ms(1000)
 
+def display_static(path="static.bmp"):
+    print("Displaying static image")
+    try:
+        os.stat(path)
+        load_image(path)
+        return True
+    except:
+        print("Failed to stat static image")
+        return False
 
 image_paths = list_images("images")
 
