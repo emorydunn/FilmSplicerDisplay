@@ -4,7 +4,6 @@
 import uos, machine
 #uos.dupterm(None, 1) # disable REPL on UART(0)
 import gc
-import webrepl
 
 def do_connect():
     import network
@@ -19,5 +18,4 @@ def do_connect():
 
 do_connect()
 
-webrepl.start()
 gc.collect()
